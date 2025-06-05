@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MominAI - Premium Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-black: #0a0a0a;
+            --glossy-black: linear-gradient(135deg, #1a1a1a, #000000);
+            --premium-gold: #ffd700;
+            --glossy-gold: linear-gradient(135deg, #ffed4e, #d4af37);
+            --dark-gold: #b8860b;
+            --shadow-gold: rgba(255, 215, 0, 0.3);
+            --shadow-black: rgba(0, 0, 0, 0.8);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-black);
+            color: var(--premium-gold);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: var(--glossy-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px var(--shadow-gold);
+            margin-bottom: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px var(--shadow-gold)); }
+            to { filter: drop-shadow(0 0 20px var(--shadow-gold)); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--glossy-black);
+            border: 2px solid var(--premium-gold);
+            border-radius: 25px;
+            padding: 8px 16px;
+            color: var(--premium-gold);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .language-toggle:hover {
+            background: var(--glossy-gold);
+            color: var(--primary-black);
+            box-shadow: 0 0 20px var(--shadow-gold);
+        }
+
+        .api-key-section {
+            background: var(--glossy-black);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--premium-gold);
+            box-shadow: 0 10px 30px var(--shadow-black);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--premium-gold);
+        }
+
+        .api-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            color: var(--premium-gold);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .api-input:focus {
+            outline: none;
+            border-color: var(--premium-gold);
+            box-shadow: 0 0 15px var(--shadow-gold);
+        }
+
+        .api-input::placeholder {
+            color: rgba(255, 215, 0, 0.5);
+        }
+
+        .save-btn {
+            background: var(--glossy-gold);
+            color: var(--primary-black);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow-gold);
+        }
+
+        .chat-container {
+            background: var(--glossy-black);
+            border-radius: 20px;
+            border: 2px solid var(--premium-gold);
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-black);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--premium-gold) var(--primary-black);
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: var(--primary-black);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--premium-gold);
+            border-radius: 4px;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 15px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: var(--glossy-gold);
+            color: var(--primary-black);
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .ai-message {
+            background: rgba(26, 26, 26, 0.8);
+            color: var(--premium-gold);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 25px;
+            color: var(--premium-gold);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--premium-gold);
+            box-shadow: 0 0 15px var(--shadow-gold);
+        }
+
+        .send-btn {
+            background: var(--glossy-gold);
+            color: var(--primary-black);
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px var(--shadow-gold);
+        }
+
+        .status-indicator {
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #90EE90;
+        }
+
+        .status-error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #FFB6C1;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--premium-gold);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden { display: none; }
+
+        /* Arabic RTL Support */
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .language-toggle {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-bottom: 20px;
+            }
+            
+            .message {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <div class="header">
+            <button class="language-toggle" onclick="toggleLanguage()">العربية</button>
+            <h1 class="logo">✨ MOMIN AI ✨</h1>
+            <p class="subtitle" id="subtitle">Premium AI Assistant Interface</p>
+        </div>
+
+
+
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="ai-message">
+                    <span id="welcome-message">👋 Welcome to MominAI! How can I help you today?</span>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Type your message here...">
+                <button class="send-btn" onclick="sendMessage()" id="sendBtn">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'en';
+        let apiKey = 'AIzaSyCVWr-BM7N4MrG8HbltR6xSNIzeLDwW5mI';
+        let isProcessing = false;
+
+        const translations = {
+            en: {
+                subtitle: "Premium AI Assistant Interface",
+                welcomeMessage: "👋 Welcome to MominAI! How can I help you today?",
+                chatPlaceholder: "Type your message here...",
+                chatError: "❌ Sorry, I encountered an error. Please try again.",
+                loadingText: "Thinking...",
+                langBtn: "العربية"
+            },
+            ar: {
+                subtitle: "واجهة مساعد الذكاء الاصطناعي المتميزة",
+                welcomeMessage: "👋 مرحباً بك في مومن AI! كيف يمكنني مساعدتك اليوم؟",
+                chatPlaceholder: "اكتب رسالتك هنا...",
+                chatError: "❌ عذراً، واجهت خطأ. يرجى المحاولة مرة أخرى.",
+                loadingText: "أفكر...",
+                langBtn: "English"
+            }
+        };
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'ar' : 'en';
+            updateLanguage();
+        }
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            document.getElementById('subtitle').textContent = t.subtitle;
+            document.getElementById('welcome-message').textContent = t.welcomeMessage;
+            document.getElementById('chatInput').placeholder = t.chatPlaceholder;
+            document.querySelector('.language-toggle').textContent = t.langBtn;
+            
+            // Update loading text if exists
+            const loadingText = document.getElementById('loading-text');
+            if (loadingText) {
+                loadingText.textContent = t.loadingText;
+            }
+            
+            // Set RTL for Arabic
+            if (currentLanguage === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.body.classList.add('rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.body.classList.remove('rtl');
+            }
+        }
+
+        function saveApiKey() {
+            // Function removed - API key is now embedded
+        }
+
+        function showStatus(message, type) {
+            // Function removed - no status messages needed
+        }
+
+        function addMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+            messageDiv.textContent = content;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function addLoadingMessage() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            messageDiv.id = 'loading-message';
+            messageDiv.innerHTML = '<span class="loading"></span> <span id="loading-text">Thinking...</span>';
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function removeLoadingMessage() {
+            const loadingMessage = document.getElementById('loading-message');
+            if (loadingMessage) {
+                loadingMessage.remove();
+            }
+        }
+
+        async function sendMessage() {
+            if (isProcessing) return;
+            
+            const chatInput = document.getElementById('chatInput');
+            const message = chatInput.value.trim();
+            
+            if (!message || !apiKey) return;
+            
+            isProcessing = true;
+            addMessage(message, true);
+            chatInput.value = '';
+            addLoadingMessage();
+            
+            try {
+                const response = await callGeminiAPI(message);
+                removeLoadingMessage();
+                addMessage(response, false);
+            } catch (error) {
+                removeLoadingMessage();
+                console.error('API Error:', error);
+                addMessage(translations[currentLanguage].chatError, false);
+            }
+            
+            isProcessing = false;
+        }
+
+        async function callGeminiAPI(message) {
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            
+            const requestBody = {
+                contents: [{
+                    parts: [{
+                        text: message
+                    }]
+                }],
+                generationConfig: {
+                temperature: 0.9, // تم التعديل هنا
+                topK: 40,
+                topP: 0.95,
+                maxOutputTokens: 2048,
+            }
+            };
+
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                return data.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error('Invalid response format from Gemini API');
+            }
+        }
+
+        // Enter key support
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Initialize
+        updateLanguage();
+    </script>
+</body>
+</html>
